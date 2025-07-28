@@ -56,12 +56,14 @@ temp_scripts/
 query_sessions/
 frontend_chats/
 files_to_query/*.pdf
-files_to_query/*.txt
+# files_to_query/*.txt  # Commented out to allow test.txt files
 files_to_query/*.xml
 
-# Excel files (except templates)
-*.xlsx
+# Excel files - Allow specific xlsx files
+# *.xlsx  # Commented out to allow xlsx files
 !template*.xlsx
+!query_tracking.xlsx
+!*evaluation*.xlsx
 
 # Node.js (Frontend)
 frontend/node_modules/

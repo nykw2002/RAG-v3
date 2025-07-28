@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 AI File Query System - Interactive Version
-Conversational interface for querying files with Claude AI
+Conversational interface for querying files with Azure OpenAI
 """
 
 import os
@@ -12,7 +12,7 @@ import tempfile
 from pathlib import Path
 from datetime import datetime
 from dotenv import load_dotenv
-import anthropic
+from azure_openai_client import Anthropic
 import re
 
 class InteractiveAIFileQuerySystem:
@@ -20,11 +20,13 @@ class InteractiveAIFileQuerySystem:
         # Load environment variables
         load_dotenv()
         
-        self.api_key = os.getenv('ANTHROPIC_API_KEY')
-        if not self.api_key:
-            raise ValueError("ANTHROPIC_API_KEY not found in .env file")
+        # Initialize Azure OpenAI client (no API key needed for Azure OAuth2)
+        try:
+            self.client = Anthropic()
+            print("Azure OpenAI client initialized successfully")
+        except Exception as e:
+            raise ValueError(f"Failed to initialize Azure OpenAI client: {e}")
         
-        self.client = anthropic.Anthropic(api_key=self.api_key)
         self.max_iterations = int(os.getenv('MAX_ITERATIONS', 10))
         
         # Set up paths
@@ -179,7 +181,7 @@ When you find a satisfactory answer, respond with 'QUERY_COMPLETE:' followed by 
         return session_file
     
     def query_files(self, user_query, session_id):
-        """Main method to process user query using Claude"""
+        """Main method to process user query using Azure OpenAI"""
         available_files = self.get_available_files()
         
         if not available_files:
@@ -210,29 +212,32 @@ You have up to {self.max_iterations} iterations if needed, but you can stop earl
             print(f"\\n Iteration {iteration + 1}/{self.max_iterations}")
             
             try:
-                # Call Claude API
+                # Call Azure OpenAI API
                 response = self.client.messages.create(
-                    model="claude-3-5-sonnet-20241022",
+                    model="gpt-4o",  # This will be handled by Azure OpenAI client
                     max_tokens=4000,
                     system=self.system_prompt,
                     messages=conversation_history
                 )
                 
-                claude_response = response.content[0].text
-                print(f"Claude is working...")
+                ai_response = response.content[0].text
+                print(f"AI is working...")
+                print(f"DEBUG: AI response (first 200 chars): {ai_response[:200]}...")
+                print(f"DEBUG: Response contains python code: {'```python' in ai_response}")
+                print(f"DEBUG: Response contains QUERY_COMPLETE: {'QUERY_COMPLETE:' in ai_response}")
                 
-                # Check if Claude indicates completion
-                is_complete = "QUERY_COMPLETE:" in claude_response
+                # Check if AI indicates completion
+                is_complete = "QUERY_COMPLETE:" in ai_response
                 
-                # CRITICAL FIX: If Claude wrote a script AND used QUERY_COMPLETE in the same response,
-                # this is invalid - Claude cannot complete without seeing script results first
-                if "```python" in claude_response and is_complete:
-                    print(f"  Claude attempted to complete before seeing script results - continuing to next iteration")
+                # CRITICAL FIX: If AI wrote a script AND used QUERY_COMPLETE in the same response,
+                # this is invalid - AI cannot complete without seeing script results first
+                if "```python" in ai_response and is_complete:
+                    print(f"  AI attempted to complete before seeing script results - continuing to next iteration")
                     is_complete = False  # Override the completion flag
                 
                 iteration_data = {
                     'iteration_number': iteration + 1,
-                    'claude_response': claude_response,
+                    'ai_response': ai_response,
                     'script_executed': False,
                     'execution_result': None,
                     'is_complete': is_complete,
@@ -240,10 +245,10 @@ You have up to {self.max_iterations} iterations if needed, but you can stop earl
                 }
                 
                 # Extract Python code from response
-                if "```python" in claude_response:
-                    code_start = claude_response.find("```python") + 9
-                    code_end = claude_response.find("```", code_start)
-                    script_content = claude_response[code_start:code_end].strip()
+                if "```python" in ai_response:
+                    code_start = ai_response.find("```python") + 9
+                    code_end = ai_response.find("```", code_start)
+                    script_content = ai_response[code_start:code_end].strip()
                     
                     # Extract files accessed by this script
                     files_this_iteration = self.extract_files_accessed(script_content)
@@ -265,18 +270,18 @@ You have up to {self.max_iterations} iterations if needed, but you can stop earl
                         print(f" Script failed: {execution_result['error'][:100]}...")
                     
                     # Add to conversation history
-                    conversation_history.append({"role": "assistant", "content": claude_response})
+                    conversation_history.append({"role": "assistant", "content": ai_response})
                     
                     if execution_result['success'] and execution_result['output']:
                         if is_complete:
                             # This should rarely happen now due to our fix above, but just in case
-                            final_answer_start = claude_response.find("QUERY_COMPLETE:") + 15
-                            final_answer = claude_response[final_answer_start:].strip()
+                            final_answer_start = ai_response.find("QUERY_COMPLETE:") + 15
+                            final_answer = ai_response[final_answer_start:].strip()
                             
                             iterations.append(iteration_data)
                             return final_answer, iterations, list(all_files_accessed)
                         else:
-                            # This is the correct flow: ask Claude to interpret results in next iteration
+                            # This is the correct flow: ask AI to interpret results in next iteration
                             interpretation_request = f"""
 The script executed successfully with the following output:
 {execution_result['output']}
@@ -290,7 +295,7 @@ If you now have a complete answer based on these script results, start your resp
                             conversation_history.append({"role": "user", "content": interpretation_request})
                     
                     else:
-                        # Script failed, ask Claude to fix it  
+                        # Script failed, ask AI to fix it  
                         error_message = f"""
 The script encountered an error:
 Error: {execution_result['error']}
@@ -303,14 +308,14 @@ Please write an improved script to solve the issue. Do NOT use 'QUERY_COMPLETE:'
                 else:
                     # No code found, check if it's a final answer
                     if is_complete:
-                        final_answer_start = claude_response.find("QUERY_COMPLETE:") + 15
-                        final_answer = claude_response[final_answer_start:].strip()
+                        final_answer_start = ai_response.find("QUERY_COMPLETE:") + 15
+                        final_answer = ai_response[final_answer_start:].strip()
                         
                         iterations.append(iteration_data)
                         return final_answer, iterations, list(all_files_accessed)
                     else:
                         # Ask for clarification but prevent premature completion
-                        conversation_history.append({"role": "assistant", "content": claude_response})
+                        conversation_history.append({"role": "assistant", "content": ai_response})
                         conversation_history.append({
                             "role": "user", 
                             "content": "Please provide a Python script to analyze the files and answer the query. Do NOT use 'QUERY_COMPLETE:' until you have executed a script and seen the results."
@@ -452,7 +457,7 @@ def main():
     except Exception as e:
         print(f" System initialization error: {str(e)}")
         print("\\nPlease check:")
-        print("1. Your API key is set in .env file")
+        print("1. Your Azure OpenAI configuration is set in .env file")
         print("2. Dependencies are installed: pip install -r requirements.txt")
         return 1
     
