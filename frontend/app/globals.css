@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 0%; /* black */
+    --foreground: 0 0% 98%; /* white */
+
+    --card: 0 0% 7%; /* dark gray */
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 0 0% 100%; /* white */
+    --primary-foreground: 0 0% 0%; /* black */
+
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 31.4%; /* gray-800 equivalent */
+    --input: 0 0% 31.4%;
+    --ring: 0 0% 83.1%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Dark theme styles to ensure everything looks right */
+body {
+  background-color: black;
+  color: white;
+}
+
+/* Override any component styles that might interfere */
+.dark, [data-theme="dark"] {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 98%;
+}
+
+/* FORCED RESPONSIVE OVERRIDES FOR CHAT */
+@layer components {
+  /* Remove all container constraints for chat */
+  .chat-tab-container {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+@layer utilities {
+  /* Force full width chat layout */
+  .chat-full-width {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
+  }
+  
+  /* Force larger sidebar on desktop */
+  @media (min-width: 1024px) {
+    .chat-sidebar-responsive {
+      width: 400px !important;
+      min-width: 400px !important;
+      flex: none !important;
+    }
+  }
+  
+  @media (min-width: 1280px) {
+    .chat-sidebar-responsive {
+      width: 450px !important;
+      min-width: 450px !important;
+    }
+  }
+  
+  /* Force larger content area */
+  @media (min-width: 1024px) {
+    .chat-content-responsive {
+      max-width: 1400px !important;
+      margin: 0 auto !important;
+      padding: 3rem !important;
+    }
+  }
+  
+  @media (min-width: 1280px) {
+    .chat-content-responsive {
+      max-width: 1600px !important;
+      padding: 4rem !important;
+    }
+  }
+  
+  /* Force larger elements */
+  @media (min-width: 1024px) {
+    .chat-text-responsive {
+      font-size: 1.25rem !important; /* text-xl */
+      line-height: 1.8 !important;
+    }
+    
+    .chat-input-responsive {
+      font-size: 1.25rem !important;
+      height: 4.5rem !important; /* h-18 */
+      padding-left: 2.5rem !important;
+      padding-right: 2.5rem !important;
+      border-radius: 1rem !important;
+    }
+    
+    .chat-button-responsive {
+      height: 4.5rem !important;
+      padding-left: 3rem !important;
+      padding-right: 3rem !important;
+      border-radius: 1rem !important;
+    }
+    
+    .chat-avatar-responsive {
+      width: 3.5rem !important;
+      height: 3.5rem !important;
+    }
+    
+    .chat-avatar-responsive svg {
+      width: 1.75rem !important;
+      height: 1.75rem !important;
+    }
+    
+    .chat-bubble-responsive {
+      padding: 2.5rem !important;
+      border-radius: 1.5rem !important;
+    }
+    
+    .chat-spacing-responsive {
+      gap: 2.5rem !important;
+    }
+  }
+}
