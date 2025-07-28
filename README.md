@@ -1,114 +1,263 @@
-# AI File Query System
+# AI File Query System (RAG-v3)
 
-An intelligent system that uses Claude AI to analyze and query PDF, XML, and TXT files through dynamically generated Python scripts.
+<div align="center">
 
-## Setup
+![Python](https://img.shields.io/badge/python-v3.8+-blue.svg)
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?logo=fastapi)
+![Next.js](https://img.shields.io/badge/Next.js-000000?logo=next.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)
+![Claude AI](https://img.shields.io/badge/Claude%20AI-000000?logo=anthropic)
 
-1. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+*An intelligent system that uses Claude AI to analyze and query documents through dynamically generated Python scripts*
 
-2. **Configure your API key:**
-   - Open `.env` file
-   - Replace `your_claude_api_key_here` with your actual Anthropic API key
+[Demo](#demo) • [Features](#features) • [Quick Start](#quick-start) • [Documentation](#documentation)
 
-3. **Add files to query:**
-   - Place your PDF, XML, or TXT files in the `files_to_query` folder
+</div>
 
-## Usage
+## 🎯 Overview
 
-### Quick Start (Easiest)
-For first-time users, use the quick start script:
+The AI File Query System is a powerful RAG (Retrieval-Augmented Generation) application that combines the intelligence of Claude AI with dynamic Python script generation to analyze and extract information from your documents. Simply ask questions in natural language, and watch as the system writes, executes, and refines Python code to find the answers.
 
-```bash
-python start.py
+### ✨ What makes this special?
+
+- **🧠 Smart Script Generation**: Claude AI writes Python scripts tailored to your specific queries
+- **🔄 Iterative Refinement**: Automatically improves its approach up to 10 times for better results
+- **💬 Natural Language Interface**: Ask questions like you would to a human analyst
+- **🌐 Modern Web UI**: Beautiful Next.js frontend with real-time updates
+- **📊 Session Management**: Track, save, and review all your queries and results
+
+## 🚀 Features
+
+### Core Capabilities
+- **Multi-format Support**: PDF, XML, and TXT files
+- **Intelligent Analysis**: Context-aware document processing
+- **Dynamic Code Generation**: Custom Python scripts for each query
+- **Real-time Processing**: WebSocket-powered live updates
+- **Session Persistence**: Save and revisit previous analyses
+
+### Interface Options
+- **🖥️ Web Interface**: Modern React/Next.js frontend
+- **💻 CLI Interface**: Interactive command-line tool
+- **🔌 API**: RESTful API for integration
+
+### Advanced Features
+- **📈 Progress Tracking**: Monitor analysis iterations in real-time
+- **📝 Excel Export**: Export session data for evaluation
+- **🔄 PDF Conversion**: Convert PDFs to TXT/XML formats
+- **🎛️ Configurable Prompts**: Customize AI behavior
+- **📊 Analytics Dashboard**: Review system performance
+
+## 🎬 Demo
+
+### Web Interface
+```
+🌐 Modern chat interface with real-time processing
+📊 Session management and history
+📁 File upload and management
+⚙️ System configuration
 ```
 
-This will:
-- Check your setup automatically
-- Guide you through any missing requirements
-- Start the interactive mode when ready
+### CLI Interface
+```bash
+$ python interactive.py
 
-### Interactive Mode (Recommended)
-Run the interactive conversational interface:
+AI FILE QUERY SYSTEM - Interactive Mode
+================================================
+Ask questions about your documents and I'll analyze them!
 
+💬 Enter your query: "What are the main topics discussed in the research papers?"
+
+🔄 Processing query (Session: 20250128_143052_001)...
+✅ Script executed successfully
+📋 Final Result: Based on analysis of 3 research papers...
+```
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.8+
+- Node.js 18+ (for web interface)
+- Claude AI API Key
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/nykw2002/RAG-v3.git
+cd RAG-v3
+```
+
+### 2. Backend Setup
+```bash
+# Install Python dependencies
+pip install -r requirements_backend.txt
+
+# Configure environment
+cp .env.example .env
+# Edit .env and add your ANTHROPIC_API_KEY
+```
+
+### 3. Frontend Setup (Optional)
+```bash
+cd frontend
+npm install
+npm run build
+cd ..
+```
+
+### 4. Add Your Files
+```bash
+# Place your documents in the files_to_query directory
+cp your_documents.pdf files_to_query/
+```
+
+### 5. Start the Application
+
+#### Option A: Web Interface (Recommended)
+```bash
+python backend_main.py
+```
+Then open http://localhost:8000 in your browser
+
+#### Option B: Command Line Interface
 ```bash
 python interactive.py
 ```
 
-This starts a conversational session where you can:
-- Ask multiple questions in a natural chat interface
-- View available files and recent sessions  
-- Get automatic session saving
-- AI stops early when it finds complete answers
-
-### Command Line Mode
-Run single queries from the command line:
-
+#### Option C: Single Query
 ```bash
-python main.py "What are the main topics discussed in the documents?"
-python main.py "Extract all dates mentioned in the files"
-python main.py "Summarize the key findings from the research papers"
+python main.py "What are the key findings in the documents?"
 ```
 
-## Project Structure
+## 📖 Documentation
 
+### File Structure
 ```
-tests/
-├── .env                    # Environment variables (API key)
-├── start.py                # Quick start script (run this first!)
-├── interactive.py          # Interactive conversational interface (recommended)
-├── main.py                 # Command-line application script
-├── system_prompt.txt       # System prompt for Claude
-├── requirements.txt        # Python dependencies
-├── test_setup.py          # Setup verification script
-├── files_to_query/         # Place your files here (PDF, XML, TXT)
-├── temp_scripts/           # Temporary Python scripts (auto-generated)
-├── query_sessions/         # Saved query sessions and results
-└── README.md              # This file
+RAG-v3/
+├── 🗂️ Backend (Python/FastAPI)
+│   ├── backend_main.py          # Main FastAPI server
+│   ├── interactive.py           # CLI interface
+│   ├── pdf_converter.py         # PDF processing
+│   └── excel_integration.py     # Excel export
+├── 🌐 Frontend (Next.js/React)
+│   ├── app/                     # Next.js app router
+│   ├── components/              # React components
+│   └── lib/                     # Utilities
+├── 📁 Data Directories
+│   ├── files_to_query/          # Your documents
+│   ├── query_sessions/          # Saved sessions
+│   └── temp_scripts/            # Generated Python scripts
+└── ⚙️ Configuration
+    ├── .env                     # Environment variables
+    ├── system_prompt.txt        # AI system prompt
+    └── requirements*.txt        # Dependencies
 ```
 
-## How It Works
+### How It Works
 
-1. **User Query**: You provide a natural language query about your files
-2. **AI Analysis**: Claude analyzes your query and available files
-3. **Script Generation**: Claude writes Python scripts to extract the needed information
-4. **Execution**: Scripts are executed automatically to process your files
-5. **Iteration**: Claude can refine its approach up to 10 times for better results
-6. **Final Answer**: You receive a comprehensive answer to your query
+1. **Query Processing**: Claude AI analyzes your natural language question
+2. **Script Generation**: AI writes custom Python code to extract needed information
+3. **Execution**: Scripts run automatically against your documents
+4. **Iteration**: System refines its approach up to 10 times if needed
+5. **Results**: You get comprehensive answers with source references
 
-## Supported File Types
+### Example Queries
 
-- **PDF**: Text extraction and analysis
-- **XML**: Structure parsing and content extraction  
-- **TXT**: Plain text analysis
+```python
+# Data extraction
+"Extract all email addresses and phone numbers from the documents"
 
-## Configuration
+# Analysis
+"What are the main themes discussed across all documents?"
 
-Edit `.env` to customize:
-- `MAX_ITERATIONS`: Maximum refinement attempts (default: 10)
-- `TEMP_SCRIPTS_DIR`: Directory for temporary scripts
-- `FILES_TO_QUERY_DIR`: Directory containing files to analyze
-- `SYSTEM_PROMPT_FILE`: Path to system prompt file
+# Comparison
+"Compare the methodologies used in the research papers"
 
-## Examples
+# Summary
+"Create a timeline of events mentioned in the reports"
 
-**Query:** "What are all the email addresses mentioned in the documents?"
+# Specific search
+"Find all references to 'machine learning' and their context"
+```
 
-**Query:** "Create a summary of each document with key dates and names"
+## 🛠️ Configuration
 
-**Query:** "Find all references to 'machine learning' and list the context"
+### Environment Variables (.env)
+```env
+# Required
+ANTHROPIC_API_KEY=your_claude_api_key_here
 
-## Troubleshooting
+# Optional
+MAX_ITERATIONS=10
+TEMP_SCRIPTS_DIR=temp_scripts
+FILES_TO_QUERY_DIR=files_to_query
+SYSTEM_PROMPT_FILE=system_prompt.txt
+```
 
-- **No files found**: Make sure your files are in `files_to_query/` directory
-- **API errors**: Check your API key in `.env` file
-- **Script errors**: Check the `temp_scripts/` folder for generated scripts
-- **Timeout errors**: Large files may need longer processing time
+### System Prompt Customization
+Edit `system_prompt.txt` to customize AI behavior:
+- Analysis approach
+- Output format preferences
+- Domain-specific instructions
+- Quality requirements
 
-## Security Notes
+## 🤝 Contributing
 
-- API keys are stored locally in `.env` (add to .gitignore)
-- Generated scripts are temporary and stored in `temp_scripts/`
-- No data is sent to external services except Claude API calls
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Development Setup
+```bash
+# Backend development
+pip install -r requirements.txt
+python backend_main.py
+
+# Frontend development  
+cd frontend
+npm run dev
+```
+
+### Areas for Contribution
+- 📄 Additional file format support
+- 🧠 Enhanced AI prompting strategies
+- 🎨 UI/UX improvements
+- 🔧 Performance optimizations
+- 📚 Documentation improvements
+
+## 📊 Performance & Limitations
+
+### Supported File Types
+- ✅ PDF (text extraction)
+- ✅ XML (structure parsing)
+- ✅ TXT (plain text)
+- 🔄 Coming: DOCX, HTML, CSV
+
+### Performance Notes
+- **File Size**: Works best with files under 10MB
+- **Processing Time**: 10-60 seconds per query depending on complexity
+- **Accuracy**: High accuracy for well-structured documents
+- **Rate Limits**: Subject to Claude AI API limits
+
+## 📜 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **Anthropic** for the amazing Claude AI API
+- **FastAPI** for the excellent web framework
+- **Next.js** for the modern frontend framework
+- **Community** for feedback and contributions
+
+## 📞 Support
+
+- 🐛 [Report Issues](https://github.com/nykw2002/RAG-v3/issues)
+- 💬 [Discussions](https://github.com/nykw2002/RAG-v3/discussions)
+- 📧 [Contact](mailto:your-email@example.com)
+
+---
+
+<div align="center">
+
+**⭐ Star this repository if you find it helpful!**
+
+Made with ❤️ by [nykw2002](https://github.com/nykw2002)
+
+</div>

@@ -1,6 +1,7 @@
 # Environment variables
 .env
 *.env
+!.env.example
 
 # API Keys and sensitive data
 **/api_key*
@@ -58,6 +59,16 @@ frontend_chats/
 files_to_query/*.pdf
 files_to_query/*.txt
 files_to_query/*.xml
+
+# Keep directories but ignore their contents
+files_to_query/*
+!files_to_query/.gitkeep
+temp_scripts/*
+!temp_scripts/.gitkeep
+query_sessions/*
+!query_sessions/.gitkeep
+frontend_chats/*
+!frontend_chats/.gitkeep
 
 # Excel files (except templates)
 *.xlsx

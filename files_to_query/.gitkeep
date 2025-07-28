@@ -1,4 +1,2 @@
-# Place your files to query here
-# Supported formats: .pdf, .xml, .txt
-
-This directory is where you should place the documents you want Claude to analyze and query.
+# This file keeps the directory in git
+# Place your PDF, XML, and TXT files here to query them
